@@ -1,0 +1,52 @@
+"
+'-': is a note
+'#': is an error needing fixing
+'*': is a solved problem
+"
+
+1/24/2023:
+# The issue with the Mat::Operator out of bounds error stems from scaling the image up too early. Check to ensure the new_wXnew_h vals don't interfere with the rowsXcols vals.
+* fixed Mat::Operator issue.
+
+# Random noise is the result of kmeans. i think it is due to bad init from eigenvectors and kmeans. Apply init factors like in matlab code and try again.
+- this is potentially due to the following: unsorted eigenvectors; not only using the first k eigenvectors.
+* sorted eigenvectors.
+* Only using the k first eigenvectors
+
+1/30/2023:
+ISSUE FOUND:
+# The laplacian matrix isn't symmetric, which means the adjacency matrix was incorrectly constructed.
+# OK SO: the adjacency matrix is symmetric, and so is the degree matrix, but the laplacian isn't... so i guess the laplacian function is broken.
+# create a max function for your adjacency matrix and then make sure that it actually is calculating the right thing by giving it a few test cases (whatever that would mean)
+- Look at the ii: jj: values you print to screen while creating the adj, they're terribly wrong.
+
+2/1/2023:
+- So something is wrong with the way that the adjacency matrix is measuring distance. Its definitely doing something wrong, I just don't know what. Compare to first column of matlab laplacian
+
+2/6/2023:
+- So the issue could be that the color pixels are being truncated by my current method of translating the image into a 1d vector, so lets test with grayscale and then think up a solution for color.
+-- Check the color issue. This could be it.
+
+* Implemented color and fixed the issue that was dealing with providing incorrect info to the vectorImg
+# I believe the color should be used in conjunction with HSV methods for optimal performance, the results are better than what they were but still aren't great.
+- We're getting closer, but there are still some quirks. Allowing you to adjust adj info from the GUI might be beneficial.
+- epsilon = [1.5:10]
+
+2/15/2023:
+- I believe a major development has happened. The current iteration is capable of producing half of the photo's meaningful info, I believe it may be somehow leaving out info though? test eigenvectors
+    and see if incorporating more equals better performance.
+    --IT DOESN'T
+- Maybe the issue still lies with the adj matrix. a way to test this is to have it write the details of the adj matrix to a text file and then test it in matlab. This would help you decide whether
+    the current problem is the eigenvector calculation
+
+2/16/2023:
+- after testing out the .csv files in matlab, it seems that adjacency matrix isn't really that off (it is
+    but not by much) but that it is the degree matrix that is really messing things up.
+* FIXED THE DEGREE MATRIX AND CONFIRMED CORRECT ADJ, DEG, and LAP MATRIX.
+# The issue HAS to be the eigenvalue decomp now.
+
+3/12/2024:
+- FINALLY THE BEAST HAS BEEN SLAID. SLAIN? WHATEVER. LFG. IT FINALLY SEGMENTS IT PROPERLY.
+- Honestly part of the issue is that if it inits poorly it gives you the wrong answer. I could have had the answer I did a month ago but because I only tested it once, probably moved on.
+NOW:
+- Lets find a way to communicate a difference between the two objects and have it where we can move the paw around the screen. From there we can manipulate its size, etc.
